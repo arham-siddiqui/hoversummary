@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Circle any text or image on a webpage and get a plain-language explanation.",
   "permissions": ["storage", "tabs"],
-  "host_permissions": ["<all_urls>", "https://api.openai.com/*"],
+  "host_permissions": ["<all_urls>", "http://localhost:11434/*", "http://127.0.0.1:11434/*"],
   "background": {
     "service_worker": "background.js"
   },
