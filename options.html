@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hover Summary settings</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main>
+      <a class="brand" href="#"><span>H</span>Hover Summary</a>
+      <section>
+        <p class="eyebrow">Settings</p>
+        <h1>Connect your OpenAI API</h1>
+        <p class="intro">Your key is saved locally in this Chrome profile and is only sent to OpenAI when you request a summary.</p>
+        <form id="form">
+          <label for="apiKey">OpenAI API key</label>
+          <div class="key-row"><input id="apiKey" type="password" autocomplete="off" placeholder="sk-…"><button type="button" id="reveal" aria-label="Show or hide key">Show</button></div>
+          <p class="help">API usage is billed separately from a ChatGPT subscription.</p>
+          <label for="model">Vision model</label>
+          <select id="model">
+            <option value="gpt-5.6-luna">GPT-5.6 Luna — fast & efficient</option>
+            <option value="gpt-5.6-terra">GPT-5.6 Terra — higher quality</option>
+            <option value="gpt-5.6">GPT-5.6 — best quality</option>
+          </select>
+          <button class="save" type="submit">Save settings</button>
+          <p id="saved" role="status"></p>
+        </form>
+      </section>
+      <aside><strong>A note about privacy</strong><p>Only the region you circle is cropped and sent for analysis. For a public release, route requests through your own backend so API keys never live in the extension.</p></aside>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

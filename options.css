@@ -1,0 +1,23 @@
+:root { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #19392d; background: #f3f7f4; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { width: min(680px, calc(100% - 36px)); margin: 0 auto; padding: 34px 0 64px; }
+.brand { display: inline-flex; align-items: center; gap: 9px; color: #264c3d; text-decoration: none; font-size: 14px; font-weight: 750; }
+.brand span { display: grid; place-items: center; width: 31px; height: 31px; color: white; background: #15966b; border-radius: 10px; }
+section { margin-top: 34px; padding: clamp(25px, 5vw, 44px); background: white; border: 1px solid #dce8e0; border-radius: 22px; box-shadow: 0 18px 50px rgba(27,64,48,.08); }
+.eyebrow { margin: 0 0 8px; color: #15966b; font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .12em; }
+h1 { margin: 0 0 10px; font-size: clamp(25px, 5vw, 34px); line-height: 1.12; letter-spacing: -.035em; }
+.intro { margin: 0 0 28px; color: #63796f; font-size: 14px; line-height: 1.6; }
+label { display: block; margin: 18px 0 7px; color: #304f42; font-size: 12px; font-weight: 700; }
+input, select { width: 100%; height: 45px; padding: 0 13px; color: #183a2d; background: #fbfdfb; border: 1px solid #ceddd3; border-radius: 10px; outline: none; font: 13px Inter, sans-serif; }
+input:focus, select:focus { border-color: #15966b; box-shadow: 0 0 0 3px rgba(21,150,107,.11); }
+.key-row { position: relative; }
+.key-row input { padding-right: 64px; }
+.key-row button { position: absolute; top: 6px; right: 6px; height: 33px; padding: 0 10px; color: #557064; background: #eef4f0; border: 0; border-radius: 7px; cursor: pointer; font-size: 11px; font-weight: 700; }
+.help { margin: 7px 0 0; color: #8a9a92; font-size: 10px; }
+.save { margin-top: 24px; padding: 12px 17px; color: white; background: #15966b; border: 0; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 750; }
+.save:hover { background: #117d59; }
+#saved { display: inline; margin-left: 10px; color: #15966b; font-size: 11px; }
+aside { margin-top: 16px; padding: 17px 19px; color: #536a5f; background: #e8f1eb; border-radius: 13px; font-size: 12px; line-height: 1.5; }
+aside strong { display: block; margin-bottom: 3px; color: #2d5142; }
+aside p { margin: 0; }

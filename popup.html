@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hover Summary</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main>
+      <header><span class="mark">H</span><div><h1>Hover Summary</h1><p>See it. Circle it. Get it.</p></div></header>
+      <button id="select" class="primary"><span class="target">⌁</span><span><strong>Select an area</strong><small>Then draw a loop around it</small></span></button>
+      <div class="divider"><span>or use the hover gesture</span></div>
+      <div class="gesture"><kbd>Alt</kbd><span>+</span><svg viewBox="0 0 42 30" aria-hidden="true"><path d="M32 23C26 29 10 27 7 18 4 8 17 3 28 7c9 4 8 13 2 17"/><path d="m27 20 5 3 1-6"/></svg><span>Circle the content</span></div>
+      <p id="status" class="status"></p>
+      <footer><button id="settings">Settings</button><span>Shortcut: <kbd>⌥ ⇧ S</kbd></span></footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

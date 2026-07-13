@@ -1,0 +1,26 @@
+:root { color-scheme: light; font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; width: 330px; color: #183a2d; background: #fbfdfb; }
+main { padding: 18px; }
+header { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+.mark { display: grid; place-items: center; width: 38px; height: 38px; color: white; background: #15966b; border-radius: 12px; font-size: 18px; font-weight: 800; box-shadow: 0 6px 14px rgba(21,150,107,.2); }
+h1 { margin: 0 0 3px; font-size: 16px; line-height: 1.1; }
+header p { margin: 0; color: #6f8178; font-size: 11px; }
+button { font: inherit; }
+.primary { display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px; color: white; text-align: left; background: #163f30; border: 0; border-radius: 13px; cursor: pointer; box-shadow: 0 7px 18px rgba(22,63,48,.16); }
+.primary:hover { background: #0f3327; }
+.primary .target { display: grid; place-items: center; width: 34px; height: 34px; background: rgba(255,255,255,.12); border-radius: 10px; font-size: 24px; }
+.primary strong, .primary small { display: block; }
+.primary strong { margin-bottom: 3px; font-size: 13px; }
+.primary small { color: #cfe2d9; font-size: 10px; }
+.divider { display: flex; align-items: center; gap: 9px; margin: 15px 0 12px; color: #91a198; font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #e2ebe5; }
+.gesture { display: flex; align-items: center; justify-content: center; gap: 7px; color: #4f675c; font-size: 11px; }
+kbd { padding: 3px 6px; color: #365247; background: #eef4f0; border: 1px solid #d8e4dc; border-bottom-width: 2px; border-radius: 6px; font: 650 10px/1.2 Inter, sans-serif; }
+.gesture svg { width: 35px; height: 25px; }
+.gesture path { fill: none; stroke: #15966b; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.status { min-height: 14px; margin: 12px 0 0; color: #a24332; text-align: center; font-size: 10px; }
+footer { display: flex; align-items: center; justify-content: space-between; margin: 12px -18px -18px; padding: 12px 18px; color: #87988f; background: #f3f7f4; border-top: 1px solid #e2ebe5; font-size: 9px; }
+footer button { padding: 0; color: #557064; background: none; border: 0; cursor: pointer; font-size: 10px; font-weight: 650; }
+footer button:hover { color: #15966b; }
+footer kbd { padding: 2px 4px; font-size: 8px; }
