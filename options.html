@@ -11,23 +11,24 @@
       <a class="brand" href="#"><span>H</span>Hover Summary</a>
       <section>
         <p class="eyebrow">Settings</p>
-        <h1>Connect your OpenAI API</h1>
-        <p class="intro">Your key is saved locally in this Chrome profile and is only sent to OpenAI when you request a summary.</p>
+        <h1>Connect to Ollama</h1>
+        <p class="intro">Hover Summary now runs the vision model locally on your Mac. Your captured region stays on your computer and no paid API key is required.</p>
         <form id="form">
-          <label for="apiKey">OpenAI API key</label>
-          <div class="key-row"><input id="apiKey" type="password" autocomplete="off" placeholder="sk-…"><button type="button" id="reveal" aria-label="Show or hide key">Show</button></div>
-          <p class="help">API usage is billed separately from a ChatGPT subscription.</p>
-          <label for="model">Vision model</label>
+          <label for="model">Local vision model</label>
           <select id="model">
-            <option value="gpt-5.6-luna">GPT-5.6 Luna — fast & efficient</option>
-            <option value="gpt-5.6-terra">GPT-5.6 Terra — higher quality</option>
-            <option value="gpt-5.6">GPT-5.6 — best quality</option>
+            <option value="qwen3-vl:2b-instruct">Qwen3-VL 2B Instruct — smallest, about 1.9 GB</option>
+            <option value="qwen3-vl:4b-instruct">Qwen3-VL 4B Instruct — recommended, about 3.3 GB</option>
+            <option value="qwen3-vl:8b-instruct">Qwen3-VL 8B Instruct — better quality, about 6.1 GB</option>
           </select>
-          <button class="save" type="submit">Save settings</button>
+          <p class="help">The model must be downloaded in Ollama before it can be used.</p>
+          <div class="actions">
+            <button class="save" type="submit">Save model</button>
+            <button class="secondary" id="test" type="button">Test connection</button>
+          </div>
           <p id="saved" role="status"></p>
         </form>
       </section>
-      <aside><strong>A note about privacy</strong><p>Only the region you circle is cropped and sent for analysis. For a public release, route requests through your own backend so API keys never live in the extension.</p></aside>
+      <aside><strong>One-time Mac setup</strong><p>Install and open Ollama, then run <code>ollama pull qwen3-vl:4b-instruct</code>. To let the extension connect, run <code>launchctl setenv OLLAMA_ORIGINS "chrome-extension://*"</code>, then completely quit and reopen Ollama.</p></aside>
     </main>
     <script src="options.js"></script>
   </body>
