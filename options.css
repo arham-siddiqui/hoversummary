@@ -15,9 +15,16 @@ input:focus, select:focus { border-color: #15966b; box-shadow: 0 0 0 3px rgba(21
 .key-row input { padding-right: 64px; }
 .key-row button { position: absolute; top: 6px; right: 6px; height: 33px; padding: 0 10px; color: #557064; background: #eef4f0; border: 0; border-radius: 7px; cursor: pointer; font-size: 11px; font-weight: 700; }
 .help { margin: 7px 0 0; color: #8a9a92; font-size: 10px; }
-.save { margin-top: 24px; padding: 12px 17px; color: white; background: #15966b; border: 0; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 750; }
+.actions { display: flex; align-items: center; gap: 9px; margin-top: 24px; }
+.save { padding: 12px 17px; color: white; background: #15966b; border: 0; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 750; }
 .save:hover { background: #117d59; }
-#saved { display: inline; margin-left: 10px; color: #15966b; font-size: 11px; }
+.secondary { padding: 11px 16px; color: #315346; background: #eef4f0; border: 1px solid #d4e1d8; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; }
+.secondary:hover { background: #e4eee8; }
+.secondary:disabled { cursor: wait; opacity: .65; }
+#saved { display: block; min-height: 17px; margin: 11px 0 0; font-size: 11px; line-height: 1.45; }
+#saved.success { color: #15966b; }
+#saved.failure { color: #a24332; }
 aside { margin-top: 16px; padding: 17px 19px; color: #536a5f; background: #e8f1eb; border-radius: 13px; font-size: 12px; line-height: 1.5; }
 aside strong { display: block; margin-bottom: 3px; color: #2d5142; }
 aside p { margin: 0; }
+aside code { padding: 2px 4px; color: #264c3d; background: rgba(255,255,255,.7); border-radius: 4px; font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; }
