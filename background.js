@@ -1,8 +1,14 @@
-const DEFAULT_MODEL = "gpt-5.6-luna";
+const DEFAULT_MODEL = "qwen3-vl:4b-instruct";
+const OLLAMA_URL = "http://127.0.0.1:11434";
+const SUPPORTED_MODELS = new Set([
+  "qwen3-vl:2b-instruct",
+  "qwen3-vl:4b-instruct",
+  "qwen3-vl:8b-instruct"
+]);
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get(["model"], ({ model }) => {
-    if (!model) chrome.storage.sync.set({ model: DEFAULT_MODEL });
+    if (!SUPPORTED_MODELS.has(model)) chrome.storage.sync.set({ model: DEFAULT_MODEL });
   });
 });
 
@@ -17,6 +23,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.runtime.openOptionsPage();
     sendResponse({ ok: true });
     return;
+  }
+
+  if (message.type === "TEST_OLLAMA") {
+    testOllama(message.model || DEFAULT_MODEL)
+      .then((result) => sendResponse({ ok: true, ...result }))
+      .catch((error) => sendResponse({ ok: false, error: friendlyError(error) }));
+    return true;
   }
 
   if (message.type === "BEGIN_LASSO") {
@@ -42,7 +55,7 @@ async function captureAndSummarize(rect, sender) {
   if (sender.tab.id) {
     chrome.tabs.sendMessage(sender.tab.id, { type: "CAPTURE_PREVIEW", croppedImage }).catch(() => {});
   }
-  const summary = await askOpenAI(croppedImage);
+  const summary = await askOllama(croppedImage);
   return { croppedImage, summary };
 }
 
@@ -79,64 +92,74 @@ function blobToDataUrl(blob) {
   });
 }
 
-async function askOpenAI(imageDataUrl) {
-  const [{ apiKey }, { model = DEFAULT_MODEL }] = await Promise.all([
-    chrome.storage.local.get(["apiKey"]),
-    chrome.storage.sync.get(["model"])
-  ]);
-  if (!apiKey) throw new Error("API_KEY_MISSING");
+async function askOllama(imageDataUrl) {
+  const { model: savedModel } = await chrome.storage.sync.get(["model"]);
+  const model = SUPPORTED_MODELS.has(savedModel) ? savedModel : DEFAULT_MODEL;
+  const base64Image = imageDataUrl.replace(/^data:image\/[a-zA-Z0-9.+-]+;base64,/, "");
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
+  const response = await fetch(`${OLLAMA_URL}/api/chat`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       model,
-      store: false,
-      reasoning: { effort: "low" },
-      max_output_tokens: 500,
-      input: [{
+      stream: false,
+      think: false,
+      keep_alive: "10m",
+      messages: [{
         role: "user",
-        content: [
-          {
-            type: "input_text",
-            text: "Explain the selected screenshot in simple, everyday language. Capture the main idea, define any difficult terms, and preserve important numbers or caveats. If it is primarily an image, diagram, or chart, explain what it shows. Be concise: use a short overview followed by at most 3 useful bullet points. Do not mention that you are looking at a screenshot."
-          },
-          { type: "input_image", image_url: imageDataUrl, detail: "high" }
-        ]
-      }]
+        content: "Explain the selected screenshot in simple, everyday language. Capture the main idea, define any difficult terms, and preserve important numbers or caveats. If it is primarily an image, diagram, or chart, explain what it shows. Be concise: use a short overview followed by at most 3 useful bullet points. Do not mention that you are looking at a screenshot. Return only the final explanation, without reasoning or analysis.",
+        images: [base64Image]
+      }],
+      options: {
+        temperature: 0.2,
+        num_predict: 500
+      }
     })
   });
 
-  const payload = await response.json();
+  const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const message = payload?.error?.message || `OpenAI request failed (${response.status}).`;
+    const message = payload?.error || `Ollama request failed (${response.status}).`;
     throw new Error(message);
   }
 
-  const text = payload.output
-    ?.filter((item) => item.type === "message")
-    .flatMap((item) => item.content || [])
-    .filter((item) => item.type === "output_text")
-    .map((item) => item.text)
-    .join("\n")
-    .trim();
+  const text = payload?.message?.content?.trim();
 
-  if (!text) throw new Error("The model returned an empty summary.");
+  if (!text) throw new Error("Ollama returned an empty summary.");
   return text;
 }
 
+async function testOllama(model) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    const response = await fetch(`${OLLAMA_URL}/api/tags`, { signal: controller.signal });
+    if (!response.ok) throw new Error(`Ollama connection failed (${response.status}).`);
+    const payload = await response.json();
+    const names = (payload.models || []).map((item) => item.name);
+    const installed = names.includes(model) || names.includes(`${model}:latest`);
+    if (!installed) throw new Error(`MODEL_MISSING:${model}`);
+    return { model };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function friendlyError(error) {
-  if (error?.message === "API_KEY_MISSING") {
-    return "Add your OpenAI API key in Hover Summary settings first.";
+  if (error?.message?.startsWith("MODEL_MISSING:")) {
+    const model = error.message.split(":").slice(1).join(":");
+    return `The ${model} model is not installed. Run: ollama pull ${model}`;
   }
-  if (/quota|billing|credits/i.test(error?.message)) {
-    return "The OpenAI account has no available API credits. Check billing, then try again.";
+  if (error?.name === "AbortError") {
+    return "Ollama did not respond. Make sure the Ollama app is running.";
   }
-  if (/401|api key|authentication/i.test(error?.message)) {
-    return "The saved OpenAI API key was rejected. Check it in settings.";
+  if (/failed to fetch|networkerror|load failed/i.test(error?.message)) {
+    return "Cannot reach Ollama. Open the Ollama app and allow Chrome extension access as described in Settings.";
+  }
+  if (/model.*not found|pull model/i.test(error?.message)) {
+    return `The selected model is not installed. Run: ollama pull ${DEFAULT_MODEL}`;
   }
   return error?.message || "Something went wrong while creating the summary.";
 }
